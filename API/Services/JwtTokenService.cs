@@ -7,26 +7,22 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace API.Services;
 
-public class TokenService(IConfiguration config) : ITokenService
+public class JwtTokenService(IConfiguration config) : ITokenService
 {
     public string CreateToken(AppUser user)
     {
-        var tokenKey = config["TokenKey"];
-
-        if(tokenKey is null || tokenKey.Length < 64){
-            throw new Exception("Invalid token key");
-        }
+        var tokenKey = config["TokenKey"] ?? throw new Exception("No Token Key found");
 
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(tokenKey));
 
         var claims = new List<Claim>{
-            new(ClaimTypes.NameIdentifier, user.UserName)
+            new Claim(ClaimTypes.NameIdentifier, user.UserName)
         };
 
-        var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
+        var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
 
         var tokenDescriptor = new SecurityTokenDescriptor{
-            SigningCredentials = creds,
+            SigningCredentials = credentials,
             Expires = DateTime.UtcNow.AddDays(7),
             Subject = new ClaimsIdentity(claims)
         };

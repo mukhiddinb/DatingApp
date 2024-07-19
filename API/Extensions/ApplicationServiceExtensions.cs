@@ -14,6 +14,6 @@ public static class ApplicationServiceExtensions
             opts.UseSqlite(config.GetConnectionString("DefaultConnection"));
         });
         services.AddCors();
-        services.AddScoped<ITokenService, TokenService>();
+        services.AddScoped<ITokenService, JwtTokenService>();
     }
 }
