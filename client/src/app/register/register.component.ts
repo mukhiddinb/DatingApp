@@ -11,7 +11,7 @@ import { ToastrService } from 'ngx-toastr';
   styleUrl: './register.component.css'
 })
 export class RegisterComponent {
-  usersFromHomeComponent = input.required<any>();
+  //usersFromHomeComponent = input.required<any>();
   //@Output() cancelRegister = new EventEmitter();
   cancelRegister = output<boolean>();
   private accountService = inject(AccountService);
