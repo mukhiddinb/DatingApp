@@ -26,14 +26,20 @@ export class MemberDetailsComponent implements OnInit {
   loadMemberDetails() {
     const username = this.currentRoute.snapshot.paramMap.get('username');
     if(username){
-      this.membersService.getMember(username).subscribe({
-        next: (response) => {
-          this.member = response;
-          response.photos.map(p => {
-            this.images.push(new ImageItem({src: p.url, thumb: p.url}));
-          });
-        }
-      });
+      if(this.membersService.members().length === 0){
+        this.membersService.getMember(username).subscribe({
+          next: (response) => {
+            this.member = response;
+            response.photos.map(p => {
+              this.images.push(new ImageItem({src: p.url, thumb: p.url}));
+            });
+          }
+        });
+      }
+      else {
+        this.member = this.membersService.members().find(m => m.userName === username);
+        this.member?.photos.map(p => this.images.push(new ImageItem({src: p.url, thumb: p.url})));
+      }
     }
   }
 }
